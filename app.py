@@ -133,13 +133,10 @@ def nextYearLoop():
 
     print(str(maleBurnNum) + " males and " + str(femaleBurnNum) + " females has burn")
 
-    for male in canMarries["males"]:                                                                                #   Marrie
-        canMarries = {
-            "males":    [x for x in humans["males"] if x.married == False and x.marrieAge <= x.age],
-            "females":  [x for x in humans["females"] if x.married == False and x.marrieAge <= x.age],
-        }
-        female = getCloseAge(canMarries["females"], male.age)
-        if female == None: continue
+    for female in canMarries["females"]:                                                                                #   Marrie
+        canMarries["males"] = [x for x in humans["males"] if x.married == False and x.marrieAge <= x.age]
+        male = getCloseAge(canMarries["males"], female.age)
+        if male == None: continue
         female.married = male
         burns = {}
         y = female.age + random.randint(1, 5)
@@ -150,9 +147,8 @@ def nextYearLoop():
             burns[y] = burn
             y += random.randint(2, 9)
         female.burns = burns
-        male.marrieAge = year
-        female.marrieAge = male.marrieAge
-        male.married = female
+        female.marrieAge = year
+        male.married = True
         marriedNum += 1
         #print(male.name + " and " + female.name + " married")
 
@@ -174,7 +170,7 @@ def nextYearLoop():
 
     time.sleep(1)
     year += 1
-    nextYear()
+    nextYearLoop()
     
 addMale(random.randint(100, 150))
 addFemale(random.randint(100, 150))
