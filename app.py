@@ -21,14 +21,15 @@ def getCloseAge(list:list, age:int):
     if len(list) == 0: return None
     nearVal = list[0]
     nearNum = abs(list[0].age - age)
-
+    nearID = 0
     for i in list[1:]:
         if nearNum > abs(i.age - age):
             nearNum = abs(i.age - age)
             nearVal = i
+        nearID += 1
     if nearNum > 10:
         return None
-    return nearVal
+    return (nearVal, nearID)
 
 def getMaleName():
     return maleNames[random.randint(0, len(maleNames)-1)]
@@ -132,11 +133,13 @@ def nextYearLoop():
             #print(female.name + " has burn " + str(maleNum) + " boy and " + str(femaleNum) + " girl")
 
     print(str(maleBurnNum) + " males and " + str(femaleBurnNum) + " females has burn")
-
-    for female in canMarries["females"]:                                                                                #   Marrie
-        canMarries["males"] = [x for x in humans["males"] if x.married == False and x.marrieAge <= x.age]
-        male = getCloseAge(canMarries["males"], female.age)
-        if male == None: continue
+    
+    for female in canMarries["females"]:
+        val = getCloseAge(canMarries["males"], female.age)
+        if val == None: continue
+        male, ID = val
+        canMarries["males"].pop(ID)
+        canMarries["females"].remove(female)
         female.married = male
         burns = {}
         y = female.age + random.randint(1, 5)
@@ -168,7 +171,7 @@ def nextYearLoop():
     femaleBurnNum = 0
     marriedNum = 0
 
-    time.sleep(1)
+    time.sleep(0)
     year += 1
     nextYearLoop()
     
